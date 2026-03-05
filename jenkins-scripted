@@ -1,0 +1,4 @@
+node ("agent-01"){
+    stage
+
+}
