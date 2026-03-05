@@ -9,12 +9,12 @@ pipeline{
     stages{
         stage("build app"){
             steps{
-                sh "maven package installed"
+                sh "mvn package install -Dskiptests"
             }
         }
         stage("test app"){
             steps{
-                sh "mvn had tested"
+                sh "mvn test"
             }
         }
         stage("build docker file"){
