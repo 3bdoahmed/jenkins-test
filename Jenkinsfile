@@ -4,7 +4,7 @@ pipeline{
     }
     tools {
         maven "mvn-3-5-4"
-        idk "JDK-11"
+        jdk "JDK-11"
     }
     stages{
         stage("build app"){
