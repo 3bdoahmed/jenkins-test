@@ -9,10 +9,12 @@ pipeline{
     environment {
         DOCKER_USERNAME = credentials("docker_username")
         DOCKER_PASSWORD = credentials("docker_password")
+        DEPI_ROUND = "R4"
     }
     stages{
         stage("build app"){
             steps{
+                sh "echo ${DEPI_ROUND}"
                 sh "mvn package install -Dskiptests"
             }
         }
@@ -23,7 +25,7 @@ pipeline{
         }
         stage("build docker file"){
             steps{
-                sh "docker build -t java-app:${BUILD_NUMBER} ."
+                sh "docker build -t abdelrahman678/java-app:v${BUILD_NUMBER} ."
             }
         }
         //stage("push image to dockerhub"){
@@ -36,7 +38,7 @@ pipeline{
         stage("push image to dockerhub"){
             steps{
                 sh "docker login -u ${DOCKER_USERNAME} -p ${DOCKER_PASSWORD}"
-                sh "docker push abdelrahman678/java-app:${BUILD_NUMBER}"
+                sh "docker push abdelrahman678/java-app:v${BUILD_NUMBER}"
             }
         }
 
