@@ -1,4 +1,26 @@
 node ("agent-01"){
-    stage
+    def javaJDK = tool name: 'JDK-11', type: 'jdk'
+    def Maven = tool name: 'mvn-3-5-4', type: 'maven'
+    env.PATH = "${javaJDK}/bin:${Maven}/bin:${env.PATH}"
+    stage("chexkout SCM"){
+        git branch: 'main', url: 'https://github.com/3bdoahmed/jenkins-test.git'
+    }
+    stage("build app"){ 
+        sh "echo ${DEPI_ROUND}"
+        sh "mvn package install -Dskiptests"
+    }
+    stage("test app"){
+        sh "mvn test"
+    }
+    stage("build docker file"){
+        sh "docker build -t abdelrahman678/java-app:v${BUILD_NUMBER} ."
+    }
+     stage("push image to dockerhub"){
+        withCredentials([string(credentialsId: 'docker_username', variable: 'DOCKER_USERNAME'), string(credentialsId: 'docker_password', variable: 'DOCKER_PASSWORD')]) {
+            sh "docker login -u ${DOCKER_USERNAME} -p ${DOCKER_PASSWORD}"
+        }
+        sh "docker push abdelrahman678/java-app:v${BUILD_NUMBER}"
+    }
+
 
 }
