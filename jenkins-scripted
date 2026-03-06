@@ -6,7 +6,6 @@ node ("agent-01"){
         git branch: 'main', url: 'https://github.com/3bdoahmed/jenkins-test.git'
     }
     stage("build app"){ 
-        sh "echo ${DEPI_ROUND}"
         sh "mvn package install -Dskiptests"
     }
     stage("test app"){
