@@ -6,6 +6,10 @@ pipeline{
         maven "mvn-3-5-4"
         jdk "JDK-11"
     }
+    environment {
+        DOCKER_USERNAME = credentials("docker_username")
+        DOCKER_PASSWORD = credentials("docker_password")
+    }
     stages{
         stage("build app"){
             steps{
@@ -22,6 +26,20 @@ pipeline{
                 sh "docker build -t java-app:${BUILD_NUMBER} ."
             }
         }
+        //stage("push image to dockerhub"){
+        //    steps{withCredentials([string(credentialsId: 'docker_username', variable: 'DOCKER_USERNAME'), string(credentialsId: 'docker_password', variable: 'DOCKER_PASSWORD')]) {
+        //    sh "docker login -u ${DOCKER_USERNAME} -p ${DOCKER_PASSWORD}"
+        //     }
+        //     sh "docker push java-app:${BUILD_NUMBER}"
+        //    }
+        //}
+        stage("push image to dockerhub"){
+            steps{
+                sh "docker login -u ${DOCKER_USERNAME} -p ${DOCKER_PASSWORD}"
+                sh "docker push abdelrahman678/java-app:${BUILD_NUMBER}"
+            }
+        }
+
 
 
     }
