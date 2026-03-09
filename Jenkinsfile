@@ -1,3 +1,4 @@
+@Library('DEPI-R4')_
 pipeline{
     agent {
         label "agent-01"
