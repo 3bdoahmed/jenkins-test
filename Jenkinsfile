@@ -12,22 +12,56 @@ pipeline{
         DEPI_ROUND = "R4"
     }
     stages{
+        //stage("build app"){
+        //    steps{
+        //        sh "echo ${DEPI_ROUND}"
+        //        sh "mvn package install -Dskiptests"
+        //    }
+        //}
+        //stage("test app"){
+        //    steps{
+        //        sh "mvn test"
+        //    }
+        //}
         stage("build app"){
             steps{
-                sh "echo ${DEPI_ROUND}"
-                sh "mvn package install -Dskiptests"
+                script{
+                    def mavenFuns = new io.depi.maven()
+                    mavenFuns.javaBuild("-Dskiptests")
+                }
             }
         }
         stage("test app"){
             steps{
-                sh "mvn test"
+                script{
+                    def mavenFuns = new io.depi.maven()
+                    mavenFuns.javaTest()
+                }
             }
         }
         stage("build docker file"){
             steps{
-                sh "docker build -t abdelrahman678/java-app:v${BUILD_NUMBER} ."
+                script{
+                    def dockerFuns = new io.depi.docker()
+                    dockerFuns.bulid_image("abdelrahman678/java-app", "v${BUILD_NUMBER}")
+                }
             }
         }
+        stage("push image to dockerhub"){
+            steps{
+                script{
+                    def dockerFuns = new io.depi.docker()
+                    dockerFuns.login("${DOCKER_USERNAME}", "${DOCKER_PASSWORD}")
+                    dockerFuns.push_image("abdelrahman678/java-app", "v${BUILD_NUMBER}")
+                }
+            }
+        }
+
+        //stage("build docker file"){
+        //    steps{
+        //        sh "docker build -t abdelrahman678/java-app:v${BUILD_NUMBER} ."
+        //    }
+        //}
         //stage("push image to dockerhub"){
         //    steps{withCredentials([string(credentialsId: 'docker_username', variable: 'DOCKER_USERNAME'), string(credentialsId: 'docker_password', variable: 'DOCKER_PASSWORD')]) {
         //    sh "docker login -u ${DOCKER_USERNAME} -p ${DOCKER_PASSWORD}"
