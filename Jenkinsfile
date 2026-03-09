@@ -35,12 +35,22 @@ pipeline{
         //     sh "docker push java-app:${BUILD_NUMBER}"
         //    }
         //}
-        stage("push image to dockerhub"){
+        //stage("push image to dockerhub"){
+        //    steps{
+        //        sh "docker login -u ${DOCKER_USERNAME} -p ${DOCKER_PASSWORD}"
+        //        sh "docker push abdelrahman678/java-app:v${BUILD_NUMBER}"
+        //    }
+        //}
+        stage("deploy java app"){
             steps{
-                sh "docker login -u ${DOCKER_USERNAME} -p ${DOCKER_PASSWORD}"
-                sh "docker push abdelrahman678/java-app:v${BUILD_NUMBER}"
+                sh """
+                    docker rm -f depi-java
+                    docker run -d -p 8090:8090 --name depi-java abdelrahman678/java-app:v${BUILD_NUMBER}
+
+                """
             }
         }
+
 
 
 
