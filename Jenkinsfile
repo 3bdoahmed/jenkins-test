@@ -52,7 +52,7 @@ pipeline{
             steps{
                 script{
                     def dockerFuns = new io.depi.docker()
-                    dockerFuns.login("${DOCKER_USERNAME}", "${DOCKER_PASSWORD}")
+                    dockerFuns.login("DOCKER_USERNAME", "DOCKER_PASSWORD")
                     dockerFuns.push_image("abdelrahman678/java-app", "v${BUILD_NUMBER}")
                 }
             }
